@@ -1,0 +1,33 @@
+﻿@model IEnumerable<EntityLayer.Concrete.Blog>
+
+                @foreach (var bc in Model)
+                {
+
+
+                    <div class="post-block-style">
+                        <div class="row align-items-center">
+                            <div class="col-md-4">
+                                <div class="post-thumb">
+                                    <img src="../@bc.BlogImage" style="width:250px;" alt="">
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="post-content">
+                                    <h2 class="post-title title-md">
+                                        <a href="#">@bc.BlogTitle</a>
+                                    </h2>
+                                    <div class="post-meta mb-7">
+                                        <span class="post-author"><a href="#"><i class="fa fa-user"></i> @bc.Author.AuthorName</a></span>
+                                        <span class="post-date"><i class="fa fa-clock-o"></i> @(((DateTime)bc.BlogDate).ToString("dd/MMM/yyyy"))</span>
+                                    </div>
+                                    <p>@bc.BlogContent.Substring(0, 200) ...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+      
+
+        
