@@ -17,7 +17,11 @@ namespace EntityLayer.Concrete
         public string Mail { get; set; }
         [StringLength(300)]
         public string CommentText { get; set; }
+        
         public int BlogId { get; set; }
         public virtual Blog Blog { get; set; }
+        public int MemberID { get; set; }
+        public virtual Member Member { get; set; }
+
     }
 }
