@@ -1,0 +1,31 @@
+﻿@model IEnumerable<EntityLayer.Concrete.Comment>
+<!-- comments start -->
+
+
+
+<div class="comments-area">
+    <h3 class="block-title"><span>03 Comments</span></h3>
+    <ul class="comments-list">
+        <li>
+            @foreach (var cm in Model)
+            {
+
+                <div class="comment">
+                    <img class="comment-avatar pull-left" alt="" src="@cm.Member.ProfilePicture">
+                    <div class="comment-body">
+                        <div class="meta-data">
+                            <span class="comment-author"> @cm.UserName</span>
+                            <span class="post-date"><i class="fa fa-clock-o"></i> @(((DateTime)cm.CommentDate).ToString("dd/MMM/yyyy"))</span>
+                        </div>
+                        <div class="comment-content">
+                            <p>@cm.CommentText</p>
+                        </div>
+                        <div class="text-left">
+                            <a class="comment-reply" href="#">Cevapla</a>
+                        </div>
+                    </div>
+                </div><!-- Comments end -->
+            }
+            </li><!-- Comments-list li end -->
+    </ul><!-- Comments-list ul end -->
+</div>

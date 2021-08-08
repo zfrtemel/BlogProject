@@ -19,7 +19,9 @@ namespace EntityLayer.Concrete
         public string UserName { get; set; }
         [StringLength(250)]
         public string Password { get; set; }
-        public DateTime BirthDate { get; set; }
+        [StringLength(250)]
+        public string ProfilePicture { get; set; }
+        public DateTime? BirthDate { get; set; }
         public bool MailSubscribe { get; set; }
         public ICollection<Comment> Comments { get; set; }
 

@@ -58,6 +58,18 @@
     <Compile Include="Migrations\202106202157168_migMembers.designer.cs">
       <DependentUpon>202106202157168_migMembers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202106251140171_default-data-pp.cs" />
+    <Compile Include="Migrations\202106251140171_default-data-pp.designer.cs">
+      <DependentUpon>202106251140171_default-data-pp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202106261649525_mig2.cs" />
+    <Compile Include="Migrations\202106261649525_mig2.designer.cs">
+      <DependentUpon>202106261649525_mig2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202108082131245_tags_add.cs" />
+    <Compile Include="Migrations\202108082131245_tags_add.designer.cs">
+      <DependentUpon>202108082131245_tags_add.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -74,6 +86,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202106202157168_migMembers.resx">
       <DependentUpon>202106202157168_migMembers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106251140171_default-data-pp.resx">
+      <DependentUpon>202106251140171_default-data-pp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106261649525_mig2.resx">
+      <DependentUpon>202106261649525_mig2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202108082131245_tags_add.resx">
+      <DependentUpon>202108082131245_tags_add.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

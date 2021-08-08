@@ -40,9 +40,10 @@ namespace WebUI.Controllers
             return PartialView();
         }
         
-        public ActionResult BlogDetails()
+        public ActionResult BlogDetails(int id)
         {
-            return View();
+            var blogDetails = bm.GetBlogDetailsList(id);
+            return View(blogDetails);
         }
         public ActionResult About()
         {
