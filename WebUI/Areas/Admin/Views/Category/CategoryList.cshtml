@@ -1,0 +1,177 @@
+﻿@model IEnumerable<EntityLayer.Concrete.Category>
+@{
+    ViewBag.Title = "CategoryList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<!-- row opened -->
+<div class="row row-sm">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-header pb-0 pd-t-25">
+                <div class="d-flex justify-content-between">
+                    <h4 class="card-title mg-b-0">Kategori Listesi</h4>
+                    <button class="btn btn-success " id="categoryAdd">Kategori Ekle</button>
+
+                </div>
+                <p class="tx-12 text-muted mb-0">Example of Dashfox Simple Table. <a href="#">Learn more</a></p>
+            </div>
+
+            <div class="card-body">
+
+                <div class="table-responsive">
+                    <table class="table text-md-nowrap" id="example1">
+                        <thead>
+                            <tr>
+                                <th class="wd-15p border-bottom-0">ID</th>
+                                <th class="wd-15p border-bottom-0">CategoryName</th>
+                                <th class="wd-20p border-bottom-0">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var cate in Model)
+                            {
+                                <tr>
+                                    <td>@cate.CategoryID</td>
+                                    <td>@cate.CategoryName</td>
+                                    <td>
+                                        <a class="btn btn-danger categoryDelete" data-category-id="@cate.CategoryID"> Sil</a>
+                                        <a class="btn btn-secondary categoryEdit" data-category-id="@cate.CategoryID">Düzenle</a>
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/div-->
+
+@section JS {
+    <script>
+
+        $(function () {
+            $("#categoryAdd").click(function (e) {
+
+
+                (async () => {
+
+                    Swal.fire({
+                        title: 'Multiple inputs',
+                        html:
+                            '<input placeholder="Kategori Adını Giriniz" id="CategoryName" type="text" class="form-control">',
+                        focusConfirm: false,
+                        preConfirm: () => {
+                            var CategoryName = $("#CategoryName").val();
+                            var data = {
+                                CategoryName: CategoryName,
+                                StatusId: 1
+                            }
+                            $.ajax({
+                                type: 'POST',
+                                url: '/Admin/Category/CategoryAdd',
+                                contentType: 'application/json;charset=utf-8',
+                                data: JSON.stringify(data),
+                                dataType: 'json',
+                                success: function (result) {
+                                    if (result == "1") {
+                                        Swal.fire('İşlem Başarılı', '', 'success')
+
+                                    }
+                                    else {
+                                        Swal.fire('Bir Hata Oluştu' + result, '', 'error')
+                                    }
+                                }
+                            })
+                        }
+                    })
+                })()
+            });
+            $(".categoryEdit").click(function (e) {
+
+                var categoryId = $(this).attr("data-category-id");
+                (async () => {
+                    Swal.fire({
+                        title: 'Multiple inputs',
+                        html:
+                            '<input placeholder="Kategori Adını Giriniz" id="CategoryName" type="text" class="form-control">',
+                        focusConfirm: false,
+                        preConfirm: () => {
+                            var CategoryName = $("#CategoryName").val();
+                            var data = {
+                                CategoryID: categoryId,
+                                CategoryName: CategoryName,
+                            }
+                            $.ajax({
+                                type: 'POST',
+                                url: '/Admin/Category/CategoryEdit/',
+                                contentType: 'application/json;charset=utf-8',
+                                data: JSON.stringify(data),
+                                dataType: 'json',
+                                success: function (result) {
+                                    if (result == "1") {
+                                        Swal.fire({
+                                            position: 'top-end',
+                                            icon: 'success',
+                                            title: 'İşlem Başarılı',
+                                            showConfirmButton: false,
+                                            timer: 1000,
+                                            willClose: () => {
+                                                location.reload();
+                                            }
+                                        })
+                                    }
+                                    else { Swal.fire('Bir Hata Oluştu', result, 'error') }
+                                }
+                            })
+                        }
+                    })
+                })()
+            });
+            $(".categoryDelete").click(function (e) {
+
+                var categoryID = $(this).attr('data-category-id');
+                Swal.fire({
+                    title: 'Eminmisiniz?',
+                    text: "Kategori Silinecek!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Evet Sil',
+                    cancelButtonText: 'Kapat'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            url: '/Admin/Category/CategoryDelete/' + categoryID,
+                            contentType: 'application/json;charset=utf-8',
+                            dataType: 'json',
+                            success: function (result) {
+                                if (result == "1") {
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'success',
+                                        title: 'İşlem Başarılı',
+                                        showConfirmButton: false,
+                                        timer: 1000,
+                                        willClose: () => {
+                                            location.reload();
+                                        }
+                                    })
+                                }
+                                else { Swal.fire('Bir Hata Oluştu', result, 'error') }
+                            }
+
+                        })
+                    }
+                })
+
+
+            });
+        });
+    </script>
+}

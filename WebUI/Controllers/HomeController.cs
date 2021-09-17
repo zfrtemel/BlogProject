@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Concrete;
+using DataAccessLayer.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +11,14 @@ namespace WebUI.Controllers
     public class HomeController : Controller
     {
         int pageSize = 5;
-        BlogManager bm = new BlogManager();
+        BlogManager bm = new BlogManager(new EfBlogDal());
         public ActionResult Index()
         {
             return View();
         }
         public PartialViewResult BlogList(int? page)
         {
+            
             if (page.HasValue)
             {
                 int pageIndex = pageSize * page.Value;
@@ -26,7 +28,7 @@ namespace WebUI.Controllers
                 { return PartialView(Blogss);}
             }
           
-            var Blogs = bm.GetAll().OrderByDescending(o => o.BlogDate).Take(pageSize);
+            var Blogs = bm.GetAll().OrderByDescending(o => o.BlogDate).Take(5);
             return PartialView(Blogs);
         }
         public PartialViewResult FeaturedPost() 
@@ -42,7 +44,7 @@ namespace WebUI.Controllers
         
         public ActionResult BlogDetails(int id)
         {
-            var blogDetails = bm.GetBlogDetailsList(id);
+            var blogDetails = bm.GetBlogById(id);
             return View(blogDetails);
         }
         public ActionResult About()

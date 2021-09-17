@@ -1,0 +1,242 @@
+﻿@model WebUI.Models.dbModels
+
+@{
+    ViewBag.Title = "BlogAdd";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<!-- row -->
+<script src="~/js/ckeditor.js"></script>
+<link href="~/Content/admin/assets/plugins/fancyuploder/fancy_fileupload.css" rel="stylesheet" />
+@foreach (var blog in Model.Blogs)
+{
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <form method="post">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="main-content-label mg-b-5">
+                            Blog Ekleme
+                        </div>
+                        <p class="mg-b-20 text-muted">Bu alandan Blog eklemek için gerekli alanları doldurarak sayfanızda yeni bir blog yayınlayabilirsiniz.</p>
+                        <div class="pd-30 pd-sm-40 bg-gray-100">
+                            <div class="row row-xs align-items-center mg-b-20">
+                                <input class="form-control" data-val="true" id="BlogId" name="BlogId" type="hidden" value="@blog.BlogId">
+                                <div class="col-md-12">
+                                    <label class="form-label mg-b-0">Blog Adı</label>
+                                </div>
+                                <div class="col-md-12 mg-t-5">
+                                    <input class="form-control" id="BlogTitle" value="@blog.BlogTitle" placeholder="Blog Adını Giriniz" type="text">
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="ql-wrapper ql-wrapper-demo bg-gray-100">
+                                        <textarea name="editor" id="editor">
+                                            @blog.BlogContent
+				                        </textarea>
+                                        <script>
+                                            CKEDITOR.replace("editor");
+                                        </script>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <select class="form-control select2-no-search" id="CategoryID" name="CategoryID">
+                                        <option label="Kategori Seç">
+                                        </option>
+                                        @foreach (var categories in Model.Categories)
+                                        {
+                                            if (blog.CategoryID == categories.CategoryID)
+                                            {
+                                                <option selected value="@categories.CategoryID">
+                                                    @categories.CategoryName
+                                                </option>
+                                            }
+                                            <option value="@categories.CategoryID">
+                                                @categories.CategoryName
+                                            </option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-12">
+                                    <div id="dropArea">
+                                        Blog Resmini Sürükleyiniz
+                                    </div>
+                                    <img class="list-group blog-image" src="@Url.Content(blog.BlogImage.ToString())" id="uploadList" />
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-main-primary btn-blog-edit pd-x-30 mg-r-5 mg-t-5">Kaydet</button>
+                            <button type="submit" class="btn btn-main-primary  pd-x-30 mg-r-5 mg-t-5">Sil</button>
+                            @if (blog.StatusId == 1)
+                            {
+                                <a class="btn btn-danger  pd-x-30 mg-r-5 mg-t-5" href="@Url.Action("BlogStatus")">
+                                    Pasif Hale Getir
+                                </a>
+
+                            }
+                            else
+                            { <a class="btn btn-success  pd-x-30 mg-r-5 mg-t-5" href="@Url.Action("BlogStatus")">
+                                    Aktif Hale Getir
+                                </a>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+
+
+
+    <style>
+        #dropArea {
+            background: #b5b5b5;
+            border: black dashed 1px;
+            height: 50px;
+            text-align: center;
+            color: #fff;
+            padding-top: 12px;
+        }
+
+        .active-drop {
+            background: #77bafa !important;
+            border: solid 2px blue !important;
+            opacity: .5;
+            color: black !important;
+        }
+    </style>
+
+    @section JS{
+
+        <!--Internal Fancy uploader js-->
+        <script src="~/js/jquery-1.10.2.js"></script>
+
+        <script src="~/js/jquery.filedrop.js"></script>
+        <script>
+            $(function () {
+                $('#select').tagsinput('add', { id: 1, text: 'some tag' });
+
+            $('#dropArea').filedrop({
+                url: '@Url.Action("UploadFiles")',
+                allowedfiletypes: ['image/jpeg', 'image/png', 'image/gif'],
+                allowedfileextensions: ['.jpg', '.jpeg', '.png', '.gif'],
+                paramname: 'files',
+                maxfiles: 5,
+                maxfilesize: 30, // in MB
+                dragOver: function () {
+                $('#dropArea').addClass('active-drop');
+            },
+                dragLeave: function () {
+                    $('#dropArea').removeClass('active-drop');
+                },
+                drop: function () {
+                    $('#dropArea').removeClass('active-drop');
+                },
+                afterAll: function (e) {
+                    $('#dropArea').html('Resminiz Yüklendi');
+                },
+                uploadFinished: function (i, file, response, time) {
+                    fileURL = file.name;
+                    console.log(fileURL);
+                }
+            })
+
+                   //blog düzenleme
+                   $('.btn-blog-edit').click(function (e) {
+                       e.preventDefault(); // prevent default submit
+                       function GetURLParameter() {
+                           var sPageURL = window.location.href;
+                           var indexOfLastSlash = sPageURL.lastIndexOf("/");
+
+                           if (indexOfLastSlash > 0 && sPageURL.length - 1 != indexOfLastSlash)
+                               return sPageURL.substring(indexOfLastSlash + 1);
+                           else
+                               return 0;
+                       }
+                       var BlogId = GetURLParameter();
+
+                       var BlogTitle = $("#BlogTitle").val();
+
+                       var BlogContent = CKEDITOR.instances.editor.getData();
+
+                       var CategoryID = $("#CategoryID").val();
+                       var data = {
+                           BlogId: BlogId,
+                           BlogTitle: BlogTitle,
+                           BlogContent: BlogContent,
+                           BlogImage: fileURL,
+                           CategoryID: CategoryID
+                       };
+                       Swal.fire({
+                           title: 'Güncelleme İşlemini Onaylıyor musunuz?',
+                           type: "info",
+                           showCancelButton: true,
+                       }).then((result) => {
+                           /* Read more about isConfirmed, isDenied below */
+                           if (result.isConfirmed) {
+                               $.ajax({
+                                   type: "POST",
+                                   url: '/Admin/Blog/BlogEdit',
+                                   contentType: "application/json;charset=utf-8",
+                                   data: JSON.stringify(data),
+                                   dataType: "json",
+                                   success: function (result) {
+
+                                       if (result == "1") { Swal.fire('Güncelleme Tamamlandı', '', 'success') }
+                                       else {
+                                           var returnData = result.errors.toString();
+                                           returnData.replace(',', '<br/>');
+                                           console.log(returnData);
+                                           Swal.fire('Bir Hata Oluştu',returnData, 'error')
+                                       }
+                                   }
+                               });
+                           }
+                       })
+                   });
+               $('input').on('itemRemoved', function (event) {
+                   console.log(event);
+                         //$.ajax({
+                         //      type: 'POST',
+                         //      url: '/Admin/Tags/TagsAdd',
+                         //      contentType: "application/json;charset=utf-8",
+                         //      dataType: "json",
+                         //      data: JSON.stringify({ TagName: value, BlogId: blogID }),
+                         //      success: function (result) {
+                         //          if (result.success=false) {
+                         //              return result.responseText;
+                         //          }
+                         //      }
+                         //  })
+               });
+               var tagsAdd = function tagsAdded(blogID) {
+                   var tags = $("#select").tagsinput('items');
+                   if (tags != null) {
+                       $.each(tags, function (key, value) {
+                           $.ajax({
+                               type: 'POST',
+                               url: '/Admin/Tags/TagsAdd',
+                               contentType: "application/json;charset=utf-8",
+                               dataType: "json",
+                               data: JSON.stringify({ TagName: value, BlogId: blogID }),
+                               success: function (result) {
+                                   if (result.success=false) {
+                                       return result.responseText;
+                                   }
+                               }
+                           })
+                       })
+                       return true;
+
+                   }
+                   else {
+                       return false;
+                   }
+
+               }
+
+           })
+        fileURL ='@blog.BlogImage';
+        </script>
+    }
+}

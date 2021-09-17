@@ -13,6 +13,8 @@ namespace EntityLayer.Concrete
         public int CategoryID { get; set; }
         [StringLength(30)]
         public String CategoryName { get; set; }
+        public int? StatusId { get; set; }
+        public virtual Status Status { get; set; }
         public ICollection<Blog> Blogs { get; set; }
     }
 }

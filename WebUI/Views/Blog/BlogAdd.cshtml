@@ -1,0 +1,121 @@
+﻿@model WebUI.Models.BlogCategories
+
+@{
+    ViewBag.Title = "BlogAdd";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<!-- row -->
+<script src="~/js/ckeditor.js"></script>
+<link href="~/Content/admin/assets/plugins/fancyuploder/fancy_fileupload.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <form method="post">
+            <div class="card">
+                <div class="card-body">
+                    <div class="main-content-label mg-b-5">
+                        Blog Ekleme
+                    </div>
+                    <p class="mg-b-20 text-muted">Bu alandan Blog eklemek için gerekli alanları doldurarak sayfanızda yeni bir blog yayınlayabilirsiniz.</p>
+                    <div class="pd-30 pd-sm-40 bg-gray-100">
+                        <div class="row row-xs align-items-center mg-b-20">
+                            <div class="col-md-12">
+                                <label class="form-label mg-b-0">Blog Adı</label>
+                            </div>
+                            <div class="col-md-12 mg-t-5">
+                                <input class="form-control" id="BlogTitle" placeholder="Blog Adını Giriniz" type="text">
+                            </div>
+                            <div class="col-md-12">
+                                <div class="ql-wrapper ql-wrapper-demo bg-gray-100">
+                                    <textarea name="editor" id="editor">
+				                    </textarea>
+                                    <script>
+                                        CKEDITOR.replace("editor");
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <select class="form-control select2-no-search" id="CategoryID" name="CategoryID">
+                                    <option label="Kategori Seç">
+                                    </option>
+                                    @foreach (var categories in Model.Categories)
+                                    {
+                                        <option value="@categories.CategoryID">
+                                            @categories.CategoryName
+                                        </option>
+                                    }
+                                </select>
+                                @Html.ValidationMessageFor(m => m.Category.CategoryName, "", new { @class = "parsley-required" })
+                            </div>
+                            <div class="col-md-12">
+                                <div id="dropArea">
+                                    Blog Resmini Sürükleyiniz
+                                </div>
+                                <ul class="list-group" id="uploadList">
+                                </ul>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-main-primary btn-blog-add pd-x-30 mg-r-5 mg-t-5">Kaydet</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+<style>
+    #dropArea {
+        background: #b5b5b5;
+        border: black dashed 1px;
+        height: 50px;
+        text-align: center;
+        color: #fff;
+        padding-top: 12px;
+    }
+
+    .active-drop {
+        background: #77bafa !important;
+        border: solid 2px blue !important;
+        opacity: .5;
+        color: black !important;
+    }
+</style>
+
+@section addBlog{
+
+    <!--Internal Fancy uploader js-->
+    <script src="~/js/jquery-1.10.2.js"></script>
+
+    <script src="~/js/jquery.filedrop.js"></script>
+
+    <script>
+           $(function () {
+            $('#dropArea').filedrop({
+                url: '@Url.Action("UploadFiles")',
+                allowedfiletypes: ['image/jpeg', 'image/png', 'image/gif'],
+                allowedfileextensions: ['.jpg', '.jpeg', '.png', '.gif'],
+                paramname: 'files',
+                maxfiles: 5,
+                maxfilesize: 30, // in MB
+                dragOver: function () {
+                $('#dropArea').addClass('active-drop');
+            },
+                dragLeave: function () {
+                    $('#dropArea').removeClass('active-drop');
+                },
+                drop: function () {
+                    $('#dropArea').removeClass('active-drop');
+                },
+                afterAll: function (e) {
+                    $('#dropArea').html('Resminiz Yüklendi');
+                },
+                uploadFinished: function (i, file, response, time) {
+                    fileURL = file.name;
+                    console.log(fileURL);
+                }
+            })
+        })
+    </script>
+}

@@ -21,6 +21,8 @@ namespace EntityLayer.Concrete
         public virtual Category Category { get; set; }
         public int AuthorID { get; set; }
         public virtual Author Author { get; set; }
+        public int? StatusId { get; set; }
+        public virtual Status Status { get; set; }
         public ICollection <Comment> Comments { get; set; }
         public ICollection<Tag> Tags{ get; set; }
     }

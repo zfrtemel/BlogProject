@@ -20,7 +20,7 @@
                                         <span class="post-author"><a href="#"><i class="fa fa-user"></i> @bc.Author.AuthorName</a></span>
                                         <span class="post-date"><i class="fa fa-clock-o"></i> @(((DateTime)bc.BlogDate).ToString("dd/MMM/yyyy"))</span>
                                     </div>
-                                    <p>@bc.BlogContent.Substring(0, 200) ...</p>
+                               @Html.Raw(bc.BlogContent.Substring(0,2))
                                 </div>
                             </div>
                         </div>

@@ -51,7 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Concrete\About.cs" />
     <Compile Include="Concrete\Admin.cs" />
     <Compile Include="Concrete\Author.cs" />
     <Compile Include="Concrete\Blog.cs" />
@@ -59,6 +58,8 @@
     <Compile Include="Concrete\Comment.cs" />
     <Compile Include="Concrete\Contact.cs" />
     <Compile Include="Concrete\Member.cs" />
+    <Compile Include="Concrete\Page.cs" />
+    <Compile Include="Concrete\Status.cs" />
     <Compile Include="Concrete\Tag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

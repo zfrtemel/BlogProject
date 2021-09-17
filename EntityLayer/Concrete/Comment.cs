@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EntityLayer.Concrete
 {
@@ -18,11 +14,13 @@ namespace EntityLayer.Concrete
         [StringLength(300)]
         public string CommentText { get; set; }
         public DateTime CommentDate { get; set; }
-
+        public int? ReplyCommentID { get; set; }
         public int BlogId { get; set; }
         public virtual Blog Blog { get; set; }
-        public int MemberID { get; set; }
+        public int? MemberID { get; set; }
         public virtual Member Member { get; set; }
+        public int? StatusId { get; set; }
+        public virtual Status Status { get; set; }
 
     }
 }

@@ -15,5 +15,8 @@ namespace EntityLayer.Concrete
         public String UserName { get; set; }
         [StringLength(50)]
         public string Password { get; set; }
+        public int? StatusId { get; set; }
+
+        public virtual Status Status { get; set; }
     }
 }

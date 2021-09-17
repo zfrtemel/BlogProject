@@ -1,4 +1,6 @@
-﻿using DataAccessLayer.Concrete;
+﻿using BusinessLayer.Abstract;
+using DataAccessLayer.Abstract;
+using DataAccessLayer.Concrete;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
@@ -8,38 +10,67 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
 {
-   public class MembersManager
+    public class MembersManager : IMemberService
     {
-        GenericRepository<Member> repoMember = new GenericRepository<Member>();
-        public int msAdd(Member m)
+        IMemberDal _memberDal;
+
+     
+        public MembersManager(IMemberDal memberDal)
         {
-            if (m.Email.Length<=10 || m.Email.Length>=50)
-            {
-                return -1;
-            }
-            return repoMember.Insert(m);
+            _memberDal = memberDal;
         }
-        public int mmAdd(Member m)
+
+        public List<Member> GetAll()
         {
-            if (m.Name.Length >50 || m.Email.Length > 50 || m.UserName.Length > 20 ||
-                m.Password.Length > 250|| m.Name == "" || m.Email == "" ||
-                m.UserName == "" || m.Password == "" ||m.Password.Length<=7)
-            {
-                return -1;
-            }
-            return repoMember.Insert(m);
+            return _memberDal.List();
+        }
+
+        public List<Member> getDeletedList()
+        {
+            return _memberDal.List(x=>x.StatusId==3);
+        }
+
+        public Member GetMember(int id)
+        {
+            return _memberDal.Get(x => x.MemberID == id);
 
         }
-        public int mmLogin(Member m)
+
+        public List<Member> GetMemberById(int id)
         {
-            if (m.UserName==""||m.UserName=="")
-            {
-                
-            }
-            return -1;
+            return _memberDal.List(x => x.MemberID == id);
         }
-        
 
+        public List<Member> getMemberStatusList()
+        {
+            return _memberDal.List(x => x.StatusId == 1);
+        }
 
+        public void MemberDelete(Member member)
+        {
+             _memberDal.Update(member);
+        }
+
+        public void MembersAdd(Member member)
+        {
+            _memberDal.Insert(member);
+        }
+
+        public void MembersEdit(Member member)
+        {
+            _memberDal.Update(member);
+        }
+
+        public void MembersMailSubscribe(Member member,int deger)
+        {
+            if (deger==1)
+            {
+                _memberDal.Update(member);
+            }
+            else
+            {
+                _memberDal.Insert(member);
+            }
+        }
     }
 }

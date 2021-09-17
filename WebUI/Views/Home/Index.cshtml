@@ -22,7 +22,7 @@
             <div class="gap-20"></div>
 
             @*Siderbar Alanı*@
-            @Html.Action("SiderBar", "Home")
+            @*@Html.Action("SiderBar", "Home")*@
 
         </div><!-- Row end -->
   
@@ -44,15 +44,12 @@
                         url: '/Home/BlogList',
                         data: { page: pageNo },
                         success: function (data) {
-
                             $("#ajax-blog-add").append(data);
                             pageNo++;
                             if ($.trim (data=='')) {pageLoadStatus = false;}
-
                         }
                     });
                 }
-            
             }
         });
     </script>

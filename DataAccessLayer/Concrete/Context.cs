@@ -10,7 +10,6 @@ namespace DataAccessLayer.Concrete
 {
    public class Context:DbContext
     {
-        public DbSet<About> Abouts { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<Blog> Blogs { get; set; }
@@ -19,5 +18,7 @@ namespace DataAccessLayer.Concrete
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Member> Members { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<Status> Statuses { get; set; }
+        public DbSet<Page> Pages { get; set; }
     }
 }

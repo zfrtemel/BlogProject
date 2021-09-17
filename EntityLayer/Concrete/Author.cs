@@ -17,6 +17,8 @@ namespace EntityLayer.Concrete
         public string AuthorImage { get; set; }
         [StringLength(250)]
         public string AuthorAbout { get; set; }
+        public int? StatusId { get; set; }
+        public virtual Status Status { get; set; }
         public ICollection<Blog> Blogs { get; set; }
 
     }

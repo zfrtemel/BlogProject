@@ -1,0 +1,185 @@
+﻿@model IEnumerable<EntityLayer.Concrete.Member>
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@foreach (var m in Model)
+{
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <form method="post">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="main-content-label mg-b-5">
+                            Kullanıcı Düzenleme
+                        </div>
+                        <p class="mg-b-20 text-muted">
+                            Bu alanda kullanıcı bilgilerini güncelleyebilirsiniz. <br />
+                            <strong>NOT: Site Adminleri Kullanıcıların Şifrelerini Göremez Sadece Değişiklik Yapabilirler</strong>
+                        </p>
+                        <div class="pd-30 pd-sm-40 bg-gray-100">
+                            <div class="row row-xs align-items-center mg-b-20">
+                                <input class="form-control" data-val="true" id="MemberID" name="MemberID" type="hidden" value="@m.MemberID">
+                                <input class="form-control" data-val="true" id="BirthDate" name="BirthDate" type="hidden" value="@m.BirthDate">
+                                <input class="form-control" data-val="true" id="MailSubsribe" name="MailSubsribe" type="hidden" value="@m.MailSubsribe">
+                                <input class="form-control" data-val="true" id="ProfilePicture" name="ProfilePicture" type="hidden" value="@m.ProfilePicture">
+                                <input class="form-control" data-val="true" id="StatusId" name="StatusId" type="hidden" value="@m.StatusId">
+
+                                <div class="col-md-12">
+                                    <label class="form-label mg-b-0">İsim Soyisim</label>
+                                </div>
+                                <div class="col-md-12 mg-t-5">
+                                    <input class="form-control" id="Name" value="@m.Name" placeholder="Ad Soyad Giriniz" type="text">
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="form-label mg-b-0">Kullanıcı Adi</label>
+                                </div>
+                                <div class="col-md-12">
+                                    <input class="form-control" id="UserName" value="@m.UserName" placeholder="Kullanıcı Adını Giriniz" type="text">
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="form-label mg-b-0">E-Mail Adresi</label>
+                                </div>
+                                <div class="col-md-12">
+                                    <input class="form-control" id="Email" value="@m.Email" placeholder="Email Adresini Giriniz" type="text">
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label class="form-label mg-b-0">Şifre</label>
+                                </div>
+                                <div class="col-md-12">
+                                    <input class="form-control" id="Password" value="@m.Password" placeholder="*************" type="password">
+                                </div>
+
+
+                            </div>
+                            <button type="submit" class="btn btn-main-primary btn-member-edit pd-x-30 mg-r-5 mg-t-5">Kaydet</button>
+                            @if (m.StatusId == 1)
+                            {
+                                <a class="btn btn-danger btn-status  pd-x-30 mg-r-5 mg-t-5" href="Admin/Members/MembersStatus/@m.MemberID">
+                                    Pasif Hale Getir
+                                </a>
+
+                            }
+                            else
+                            { <a class="btn btn-success btn-status  pd-x-30 mg-r-5 mg-t-5" href="Admin/Members/MembersStatus/@m.MemberID">
+                                    Aktif Hale Getir
+                                </a>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+
+
+
+    @section JS{
+
+        <!--Internal Fancy uploader js-->
+        <script src="~/js/jquery-1.10.2.js"></script>
+
+        <script src="~/js/jquery.filedrop.js"></script>
+        <script>
+            $(function () {
+                function GetURLParameter() {
+                    var sPageURL = window.location.href;
+                    var indexOfLastSlash = sPageURL.lastIndexOf("/");
+
+                    if (indexOfLastSlash > 0 && sPageURL.length - 1 != indexOfLastSlash)
+                        return sPageURL.substring(indexOfLastSlash + 1);
+                    else
+                        return 0;
+                }
+
+
+                $('.btn-status').click(function (e) {
+                    e.preventDefault();
+                    var MemberID = GetURLParameter();
+                    $.ajax({
+                        type: "POST",
+                        url: '/Admin/Members/MembersStatus/' + MemberID,
+                        contentType: "application/json;charset=utf-8",
+                        dataType: "json",
+                        success: function (result) {
+                            if (result == "1") {
+                                Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: 'İşlem Başarılı',
+                                    showConfirmButton: false,
+                                    timer: 1000,
+                                    willClose: () => {
+                                        location.reload();
+                                    }
+                                })
+                            }
+                            else {
+                                Swal.fire('Bir Hata Oluştu', result,'error')
+                            }
+                        }
+                    });
+
+                });
+                //Member düzenleme
+                $('.btn-member-edit').click(function (e) {
+                    e.preventDefault(); // prevent default submit
+
+                    var MemberID = GetURLParameter();
+                    var data = {
+                        MemberID: MemberID,
+                        Name: $("#Name").val(),
+                        Email: $("#Email").val(),
+                        BirthDate: $("#BirthDate").val(),
+                        ProfilePicture: $("#ProfilePicture").val(),
+                        StatusId: $("#StatusId").val(),
+                        MailSubsribe: $("#MailSubsribe").val(),
+                        UserName: $("#UserName").val()
+                    };
+                    if ($("#Password").val() != "") {
+                        data.Password = $("#Password").val();
+
+                    }
+
+                    Swal.fire({
+                        title: 'Güncelleme İşlemini Onaylıyor musunuz?',
+                        type: "info",
+                        showCancelButton: true,
+                    }).then((result) => {
+                        /* Read more about isConfirmed, isDenied below */
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                type: "POST",
+                                url: '/Admin/Members/Edit/' + MemberID,
+                                contentType: "application/json;charset=utf-8",
+                                data: JSON.stringify(data),
+                                dataType: "json",
+                                success: function (result) {
+
+                                    if (result == "1") { Swal.fire('Güncelleme Tamamlandı', '', 'success') }
+                                    else {
+                                        var returnData = result.errors.toString();
+                                        returnData.replace(',', '<br/>');
+
+                                        Swal.fire('Bir Hata Oluştu', returnData, 'error')
+                                    }
+                                }
+                            });
+                        }
+                    })
+                });
+
+
+            })
+        </script>
+    }
+}
+

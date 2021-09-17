@@ -1,0 +1,115 @@
+﻿@model IEnumerable<EntityLayer.Concrete.Member>
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<!-- row opened -->
+<div class="row row-sm">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-header pb-0 pd-t-25">
+                <div class="d-flex justify-content-between">
+                    <h4 class="card-title mg-b-0">Kullanıcılar Listesi</h4>
+                </div>
+            </div>
+
+            <div class="card-body">
+
+                <div class="table-responsive">
+                    <table class="table text-md-nowrap" id="example1">
+                        <thead>
+                            <tr>
+                                <th class="wd-15p border-bottom-0">ID</th>
+                                <th class="wd-15p border-bottom-0">İsim</th>
+                                <th class="wd-20p border-bottom-0">Kullanıcı Adı</th>
+                                <th class="wd-20p border-bottom-0">Mail Adresi</th>
+                                <th class="wd-20p border-bottom-0">Kullanıcının Durumu</th>
+                                <th class="wd-20p border-bottom-0">Mail Abonelik Durumu</th>
+                                <th class="wd-20p border-bottom-0">Sil</th>
+                                <th class="wd-20p border-bottom-0">Düzenle</th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var member in Model)
+                            {
+                                <tr>
+                                    <td>@member.MemberID</td>
+                                    <td>@member.Name</td>
+                                    <td>@member.UserName</td>
+                                    <td>@member.Email</td>
+                                    <td>@member.Status.StatusName</td>
+                                        @if (@member.MailSubsribe == true)
+                                        {
+                                        <td>Mail Abonesi</td>
+                                        }
+                                        else
+                                        {
+                                            <td>Mail Abonesi Değil</td>
+                                        }
+
+                                    <td><a class="btn btn-danger memberDelete" data-member-id="@member.MemberID"> Sil</a></td>
+                                    <td><a class="btn btn-secondary memberEdit" href="@Url.Action("Edit",new { id=member.MemberID})">Düzenle</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/div-->
+@section JS{
+    <script>
+
+        $(function () {
+
+            $(".memberDelete").click(function (e) {
+
+                var memberID = $(this).attr('data-member-id');
+                Swal.fire({
+                    title: 'Eminmisiniz?',
+                    text: "Üye Silinecek!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Evet Sil',
+                    cancelButtonText: 'Kapat'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            url: '/Admin/Members/Delete/' + memberID,
+                            contentType: 'application/json;charset=utf-8',
+                            dataType: 'json',
+                            success: function (result) {
+                                if (result == "1") {
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'success',
+                                        title: 'İşlem Başarılı Lütfen Bekleyiniz...',
+                                        showConfirmButton: false,
+                                        timer: 1000,
+                                        willClose: () => {
+                                            location.reload();
+                                        }
+                                    })
+                                }
+                                else { Swal.fire('Bir Hata Oluştu',result,  'error') }
+                            }
+
+                        })
+                    }
+                })
+
+
+            });
+        });
+    </script>
+
+
+}

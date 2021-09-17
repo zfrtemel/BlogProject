@@ -22,8 +22,10 @@ namespace EntityLayer.Concrete
         [StringLength(250)]
         public string ProfilePicture { get; set; }
         public DateTime? BirthDate { get; set; }
-        public bool MailSubscribe { get; set; }
+        public bool MailSubsribe { get; set; }
+        public int? StatusId { get; set; }
+        public virtual Status Status { get; set; }
         public ICollection<Comment> Comments { get; set; }
-
+         
     }
 }

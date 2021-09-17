@@ -19,19 +19,23 @@ namespace DataAccessLayer.Concrete
         }
         public int Delete(T p)
         {
-            _object.Remove(p);
-      return c.SaveChanges();
+            var deletedEntity = c.Entry(p);
+            deletedEntity.State = EntityState.Deleted;
+            // _object.Remove(entity);
+            return c.SaveChanges();
         }
-
-        public T GetById(int id)
+       
+        public T Get(Expression<Func<T, bool>> filter)
         {
-            return _object.Find(id);
+            return _object.SingleOrDefault(filter); // Bir dizide ya da listede sadece bir tane deger döndürmek icin kullanilan Linq komutudur.
         }
 
         public int Insert(T p)
         {
-            _object.Add(p);
-           return c.SaveChanges();
+            var addedEntity = c.Entry(p);
+            addedEntity.State = EntityState.Added;
+            //_object.Add(p);
+            return c.SaveChanges();
         }
 
         public List<T> List(Expression<Func<T, bool>> filter)
@@ -47,6 +51,10 @@ namespace DataAccessLayer.Concrete
 
         public int Update(T p)
         {
+
+
+            var updatedEntity = c.Entry(p);
+            updatedEntity.State = EntityState.Modified;
             return c.SaveChanges();
         }
     }

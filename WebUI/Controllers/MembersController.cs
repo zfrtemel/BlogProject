@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Concrete;
+using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace WebUI.Controllers
 {
     public class MembersController : Controller
     {
-        MembersManager mm = new MembersManager();
+        MembersManager mm = new MembersManager(new EfMemberDal());
         public PartialViewResult MailSubscribeAdd()
         {
             return PartialView();
@@ -18,8 +19,8 @@ namespace WebUI.Controllers
         [HttpPost]
         public PartialViewResult MailSubscribeAdd(Member m)
         {
-            m.MailSubscribe = true;
-            mm.msAdd(m);
+            m.StatusId = 1;
+            mm.MembersAdd(m);
 
             return PartialView();
         }

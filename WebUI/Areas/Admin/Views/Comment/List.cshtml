@@ -1,0 +1,153 @@
+﻿@model IEnumerable<EntityLayer.Concrete.Comment>
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row row-sm">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-header pb-0 pd-t-25">
+                <div class="d-flex justify-content-between">
+                    <h4 class="card-title mg-b-0">Blog Listesi</h4>
+                </div>
+                <p class="tx-12 text-muted mb-0">Example of Dashfox Simple Table. <a href="#">Learn more</a></p>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table text-md-nowrap" id="example1">
+                        <thead>
+                            <tr>
+                                <th class="wd-15p border-bottom-0">ID</th>
+                                <th class="wd-15p border-bottom-0">Kullanıcı Adı</th>
+                                <th class="wd-20p border-bottom-0">E-Mail Adresi</th>
+                                <th class="wd-15p border-bottom-0">Yorum Detay</th>
+                                <th class="wd-10p border-bottom-0">Yorum Eklenme Tarihi</th>
+                                <th class="wd-10p border-bottom-0">Yorum Durumu</th>
+                                <th class="wd-25p border-bottom-0">İşlem</th>
+                                <th class="wd-25p border-bottom-0">Sil</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CommentID)
+                                    </td>
+
+                                    @if (item.MemberID != null)
+                                    {
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Member.UserName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Member.Email)
+                                            @*if koyulacak*@
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.UserName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Mail)
+                                            @*if koyulacak*@
+                                        </td>
+                                    }
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CommentText)
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CommentDate)
+                                    </td>
+
+                                    <td>
+                                        @if (item.StatusId == 4)
+                                        {
+                                            <p style="color:red;font-weight: bold;">@item.Status.StatusName</p>
+
+                                        }
+                                        else
+                                        {
+                                            @Html.DisplayFor(modelItem => item.Status.StatusName)
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.StatusId == 4 || item.StatusId == 2)
+                                        {
+                                            <a class="btn btn-success btn-lg btn-block btn-islem" data-comment-id="@item.CommentID" data-btn-id="1">Aktif Et</a>
+
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-info btn-lg btn-block btn-islem" data-comment-id="@item.CommentID" data-btn-id="2">Pasif Hale Getir</a>
+
+                                        }
+
+
+                                    </td>
+                                    <td>
+
+                                        <a class="btn btn-lg btn-warning" href="/Admin/Comment/DeletedComment/@item.CommentID"> Sil</a>
+                                    </td>
+                                </tr>
+                            }
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section JS{
+
+    <script>
+
+
+    $(function () {
+        $(".btn-islem").click(function (e) {
+            e.preventDefault();
+            var id = parseInt($(this).attr("data-comment-id"));
+            var commentStatus = parseInt($(this).attr("data-btn-id"));
+            var data = {};
+            data.name = $(this).attr("data-btn-id");
+            data.commentId = $(this).attr("data-comment-id");
+            console.log(data);
+
+            $.ajax({
+                type: 'GET',
+                url: "@Url.Action("CommentStatus", "Comment")",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                data: { commentid: id, CommentStatusID:commentStatus},
+                success:function(sonuc) {
+                    if (sonuc == "1") {
+                        Swal.fire({
+                            title: 'İşlem Başarılı',
+                            icon: 'success',
+                            showDenyButton: false,
+                            showCancelButton: false,
+                            confirmButtonText: 'OK',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            } 
+                        })
+                    }
+                    else {
+                        swal.fire('Bir Hata Oluştu',sonuc,"error")
+                    }
+
+                }
+            });
+        });
+
+    });
+    </script>
+}
